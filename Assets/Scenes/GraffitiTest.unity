@@ -405,7 +405,7 @@ MonoBehaviour:
   arCamera: {fileID: 9}
   editorCamera: {fileID: 1212650688}
   mountToCamera: {fileID: 1794739794}
-  enableEditorCamera: 0
+  enableEditorCamera: 1
 --- !u!1 &481742511
 GameObject:
   m_ObjectHideFlags: 0
