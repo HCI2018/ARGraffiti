@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 using ARGraffiti.AR;
-
+using UnityEngine.UI;
 public class ArtboardFactory : MonoBehaviour {
+    const float planeExtent = 10f;
 
 	public RenderTexture artboardRT;
     public float maxRayDistance = 30.0f;
@@ -12,6 +13,9 @@ public class ArtboardFactory : MonoBehaviour {
 
 	public GameObject artboardPrefab;
     Vector3 centerPoint;
+
+	public RawImage rawImage;
+	
 
     // Use this for initialization
     void Start () {
@@ -48,9 +52,17 @@ public class ArtboardFactory : MonoBehaviour {
 			Vector3 scaledSize = Vector3.Scale(localSize, collider.transform.lossyScale);
 			Vector2 xzSize = new Vector2(scaledSize.x, scaledSize.z);
 
-
+			// Set up artboard
 			GameObject artboard = Instantiate(artboardPrefab);
-			artboard.GetComponent<ArtboardManager>().InitArtboard(worldCenter, xzSize);
+            ArtboardManager manager = artboard.GetComponent<ArtboardManager>();
+			RenderTexture rt = manager.InitArtboard(worldCenter, collider.transform.rotation, xzSize);
+
+
+			if(rawImage)
+			{
+				rawImage.texture = rt;
+			}
+
 		}
 		
 	}

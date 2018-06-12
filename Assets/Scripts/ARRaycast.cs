@@ -53,7 +53,7 @@ public static class ARRaycast {
 
         List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface().HitTest(point, resultTypes);
         
-        Debug.Log(hitResults.Count);
+//        Debug.Log(hitResults.Count);
         if (hitResults.Count > 0)
         {
             foreach (var hitResult in hitResults)

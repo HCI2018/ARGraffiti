@@ -3,6 +3,7 @@
 	Properties
 	{
 		[PreRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_TintColor ("Tint Color", Color) = (1, 1, 1, 1)
 		_Flow ("Flow", Range(0, 1)) = 1
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
@@ -20,7 +21,21 @@
 		Cull Off
 		Lighting Off
 		ZWrite Off
-		Blend OneMinusDstColor One
+		ZTest Off
+
+
+		// Additive
+		// Blend One One
+
+		// Soft Additive
+		// Blend OneMinusDstColor One
+
+		// Transparent
+		// Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcColor
+		Blend SrcAlpha OneMinusSrcAlpha, SrcAlpha One
+
+
+		// Blend One OneMinusSrcAlpha
 
 		Pass
 		{
@@ -48,6 +63,7 @@
 			float4 _MainTex_ST;
 
 			float _Flow;
+			float4 _TintColor;
 			
 			v2f vert (appdata v)
 			{
@@ -66,9 +82,11 @@
 				// if(flow < COLOR_MIN_STEP)
 				// 	flow = COLOR_MIN_STEP;
 
-				col *= flow;
+				half4 final = _TintColor;
 				
-				return col;
+				final.a = col.r * flow;
+				
+				return final;
 			}
 			ENDCG
 		}
