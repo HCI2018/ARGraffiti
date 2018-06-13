@@ -4,13 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
+public class ColorButton : MonoBehaviour/*, IPointerUpHandler, IPointerDownHandler*/ {
 
 	public GameObject selector;
 
 	public GameObject tankManager;
 
-	public float factor;
+	public GameObject box;
+
+	RectTransform rt;
+
+	TankManager tm;
 
 	Image image;
 
@@ -22,28 +26,53 @@ public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 
 	Vector3 selectorPos;
 
+	public bool isSelecting = false;
+
+	Vector3 originPos;
+
+	Vector3 selectedPos;
+
+	float currentTime = 0;
+
+	float timeOfTravel = 1;
+
+	float normalizedValue;
+
 	// Use this for initialization
 	void Start () {
+		rt = GetComponent<RectTransform>();
+		originPos = rt.anchoredPosition3D;
+		selectedPos = new Vector3(0, originPos.y, 0);
 		image = GetComponent<Image>();
 		sts = selector.GetComponent<SprayedTankSelector>();
+		tm = tankManager.GetComponent<TankManager>();
 		sr = new SelectorResult();
 		selectorPos = new Vector3();
+		button = GetComponent<Button>();
+		button.onClick.AddListener(SelectTask);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		//Debug.Log(originPos);
+		//Debug.Log(selectedPos);
+		//Debug.Log(selectorPos);
 		selectorPos = selector.transform.position;
-        if (isDown) {  
-			if(tankManager.activeInHierarchy == false){
-				tankManager.transform.position = selectorPos + selector.transform.forward * factor;
-				Debug.Log("set");
-				tankManager.SetActive(true);
-			}
-            if (Time.time - lastIsDownTime > delay) {  
-                Debug.Log("长按");  
-                lastIsDownTime = Time.time;  
-				RaycastAndSet();
-            }  
+        if (isSelecting) {  
+			// if(tankManager.activeInHierarchy == false){
+			// 	tankManager.transform.position = selectorPos;
+				
+			// 	tankManager.SetActive(true);
+			// 	box.SetActive(true);
+			// 	tm.initTankManager();
+			// 	tm.SortTank(tm.sortType);
+			// }
+			RaycastAndSet();
+            // if (Time.time - lastIsDownTime > delay) {   
+            //     lastIsDownTime = Time.time;  
+			// 	RaycastAndSet();
+            // }  
         }  
 	}
 
@@ -54,7 +83,13 @@ public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 				image.color = sr.color;
 			}
 			else{
-				image.color = sr.lastColor;
+				if(sr.lastColor == new Color(0,0,0,0)){
+					image.color = Color.white;
+				}
+				else{
+					image.color = sr.lastColor;
+				}
+				
 			}
 		}
 	}
@@ -65,24 +100,70 @@ public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
   
     private float lastIsDownTime;  
 
-	public void OnPointerDown (PointerEventData eventData)  
-    {  
-        isDown = true;  
-        lastIsDownTime = Time.time;  
-    }  
+	// public void OnPointerDown (PointerEventData eventData)  
+    // {  
+    //     isDown = true;  
+    //     lastIsDownTime = Time.time;  
+    // }  
   
-    public void OnPointerUp (PointerEventData eventData)  
-    {  
-        isDown = false;  
+    // public void OnPointerUp (PointerEventData eventData)  
+    // {  
+    //     isDown = false;  
 		
-		if(sts.HitTestTank(sts.maxRayDistance, sts.sprayedTankLayer)){
-			image.color = sr.color;
-			sts.SetLastColor(sr.color);
+	// 	if(sts.HitTestTank(sts.maxRayDistance, sts.sprayedTankLayer)){
+	// 		image.color = sr.color;
+	// 		sts.SetLastColor(sr.color);
+	// 	}
+	// 	else{
+	// 		image.color = sr.lastColor;
+	// 	}
+
+	// 	tankManager.SetActive(false);
+	// 	box.SetActive(false);
+    // }  
+
+	void SelectTask(){
+		if(isSelecting){
+			if(sts.HitTestTank(sts.maxRayDistance, sts.sprayedTankLayer)){
+				image.color = sr.color;
+				sts.SetLastColor(sr.color);
+			}
+			else{
+				image.color = sr.lastColor;
+			}	
+			tankManager.SetActive(false);
+			box.SetActive(false);
+			MoveToPosition(originPos);
 		}
 		else{
-			image.color = sr.lastColor;
+			if(tankManager.activeInHierarchy == false){
+				MoveToPosition(selectedPos);
+				//tankManager.transform.position = selectorPos;
+				//tankManager.transform.position = 
+				tankManager.SetActive(true);
+				box.SetActive(true);
+				tm.initTankManager();
+				tm.SortTank(tm.sortType);
+			}
 		}
+		isSelecting ^= true;
+	}
 
-		tankManager.SetActive(false);
-    }  
+	
+	void MoveToPosition(Vector3 targetPos){
+		StopAllCoroutines();
+		currentTime = 0;
+		StartCoroutine(moving(targetPos));
+	}
+
+
+	IEnumerator moving(Vector3 targetPos){
+		while(currentTime < timeOfTravel){
+			currentTime += Time.deltaTime;
+			normalizedValue = currentTime / timeOfTravel;
+			rt.anchoredPosition3D = Vector3.Lerp(rt.anchoredPosition3D, targetPos, normalizedValue);
+			yield return null;
+		}
+	} 
+	
 }

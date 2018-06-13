@@ -21,7 +21,7 @@ public class SprayedTankSelector : MonoBehaviour {
 	SelectorResult sr;
 
 	void Start(){
-		cam = GetComponent<Camera>();
+		cam = GetComponentInParent<Camera>();
 		sr = new SelectorResult();
 		sr.lastColor = Color.white;
 	}
@@ -31,8 +31,14 @@ public class SprayedTankSelector : MonoBehaviour {
 		RaycastHit hit;
 		
 		if(Physics.Raycast(ray, out hit, maxRayDistance, layer)){
+			if(hit.transform.tag == "Box"){
+				sr.found = false;
+			}
+			else{
 				sr.found = true;
 				sr.color = hit.transform.GetComponent<ColorInfo>().color;
+				hit.transform.GetComponent<TankBehavior>().selected = true;
+			}
 		}
 		else{
 				sr.found = false;
@@ -45,7 +51,12 @@ public class SprayedTankSelector : MonoBehaviour {
 		Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 		RaycastHit hit;
 		if(Physics.Raycast(ray, out hit, maxRayDistance, layer)){
+			if(hit.transform.tag == "Box"){
+				return false;
+			}
+			else{
 				return true;
+			}
 		}
 		else{
 				return false;
