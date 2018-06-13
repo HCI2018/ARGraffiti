@@ -18,6 +18,8 @@ public class ArtboardManager : MonoBehaviour {
 	Material displayMat;
 	public RenderTexture artboardRT;
 
+	public bool noClearMode = true;
+
 	Vector3 worldAnchor;
 	Vector3 worldToHereOffset{
 		get{
@@ -29,8 +31,13 @@ public class ArtboardManager : MonoBehaviour {
 
     void Start()
     {
-		worldAnchor = Vector3.zero;
-        sizeInMeter = new Vector2(1, 1);
+		// commented because the following 2 lines of code
+		// create race condition with InitArtboard()
+
+		// worldAnchor = Vector3.zero;
+        // sizeInMeter = new Vector2(1, 1);
+
+		dirtySprites = new List<Transform>();
     }
 
 	/// Initialize the artboard with the given center and size.
@@ -47,12 +54,19 @@ public class ArtboardManager : MonoBehaviour {
 		artboardRT.Create();
 
         rigCamera = rig.GetComponentInChildren<Camera>();
+
+		if(noClearMode)
+		{
+            rigCamera.GetComponent<PrePostRender>().onPostRender += CleanSpriteCallback;
+		}
 		
 
         rigCamera.orthographicSize = sizeInMeter.y / 2.0f * unitsPerMeter;
         this.sizeInMeter = sizeInMeter;
         rigCamera.targetTexture = artboardRT;
 		worldAnchor = worldCenter;
+
+		Debug.Log(sizeInMeter);
 
 		// set up display
 		display.SetPositionAndRotation(worldCenter, worldRotation);
@@ -73,11 +87,6 @@ public class ArtboardManager : MonoBehaviour {
 		// displayRenderer.sharedMaterial.SetTexture("_MetallicGlossMap", Texture2D.blackTexture);
 		
 
-        foreach (string keyword in displayRenderer.material.shaderKeywords)
-        {
-            Debug.Log(keyword);
-        }
-
 		return artboardRT;
 	}
 
@@ -95,24 +104,58 @@ public class ArtboardManager : MonoBehaviour {
 		// TODO: implement scale
 		// sprite.localScale = realSize;
 		sprite.parent = rig;
+
+		if(noClearMode)
+			dirtySprites.Add(sprite);
+	}
+
+//	bool isDirty = false;
+	List<Transform> dirtySprites;
+	void LateUpdate()
+	{	
+		if(!noClearMode)  return;
+
+		if(dirtySprites != null && dirtySprites.Count > 0)
+		{
+            rigCamera.clearFlags = CameraClearFlags.Nothing;
+            rigCamera.enabled = false;
+            rigCamera.Render();
+		}
+		
+	}
+
+	void CleanSpriteCallback(Camera cam)
+	{
+		if(cam != rigCamera) return;
+		foreach(Transform sprite in dirtySprites)
+		{
+			sprite.gameObject.SetActive(false);
+		}
+		dirtySprites.Clear();
 	}
 
 
 	Vector2 ArtboardInverseTransformPoint(Vector3 worldPos)
 	{
 		Vector3 posInDisplay3d = display.InverseTransformPoint(worldPos);
-		Debug.Log(posInDisplay3d);
+ 		
 
 
 		Vector2 posInDisplay = new Vector2(posInDisplay3d.x, posInDisplay3d.z);
+        
 
 		Vector2 offsetInMeter = Vector2.Scale(posInDisplay, sizeInMeter);
+
+        // Debug.Log(offsetInMeter);
 		return offsetInMeter;
 	}
 
-
-	void OnDestroy()
+	void OnDisable()
 	{
-
+		if(rigCamera)
+		{
+            rigCamera.GetComponent<PrePostRender>().onPostRender -= CleanSpriteCallback;
+		}
 	}
+	
 }

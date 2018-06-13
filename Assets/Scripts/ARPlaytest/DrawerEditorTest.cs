@@ -13,14 +13,14 @@ public class DrawerEditorTest : MonoBehaviour {
     {
         if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            spriteDrawer.StartDrawing();
+            // spriteDrawer.StartDrawing();
             artboardDrawer.StartDrawing();
             drawing = true;
         }
 
         if (Input.GetMouseButtonUp(0) && drawing)
         {
-            spriteDrawer.StopDrawing();
+            // spriteDrawer.StopDrawing();
             artboardDrawer.StopDrawing();
             drawing = false;
         }
