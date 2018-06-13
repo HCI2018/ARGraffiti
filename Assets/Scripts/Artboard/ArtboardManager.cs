@@ -29,8 +29,11 @@ public class ArtboardManager : MonoBehaviour {
 
     void Start()
     {
-		worldAnchor = Vector3.zero;
-        sizeInMeter = new Vector2(1, 1);
+		// commented because the following 2 lines of code
+		// create race condition with InitArtboard()
+
+		// worldAnchor = Vector3.zero;
+        // sizeInMeter = new Vector2(1, 1);
 
 		dirtySprites = new List<Transform>();
     }
@@ -58,6 +61,8 @@ public class ArtboardManager : MonoBehaviour {
         rigCamera.targetTexture = artboardRT;
 		worldAnchor = worldCenter;
 
+		Debug.Log(sizeInMeter);
+
 		// set up display
 		display.SetPositionAndRotation(worldCenter, worldRotation);
 		display.localScale = Vector3.Scale(display.localScale, new Vector3(sizeInMeter.x, 1f, sizeInMeter.y));
@@ -76,11 +81,6 @@ public class ArtboardManager : MonoBehaviour {
         // displayRenderer.sharedMaterial.mainTexture = artboardRT;
 		// displayRenderer.sharedMaterial.SetTexture("_MetallicGlossMap", Texture2D.blackTexture);
 		
-
-        foreach (string keyword in displayRenderer.material.shaderKeywords)
-        {
-            Debug.Log(keyword);
-        }
 
 		return artboardRT;
 	}
@@ -130,12 +130,15 @@ public class ArtboardManager : MonoBehaviour {
 	Vector2 ArtboardInverseTransformPoint(Vector3 worldPos)
 	{
 		Vector3 posInDisplay3d = display.InverseTransformPoint(worldPos);
-// 		Debug.Log(posInDisplay3d);
+ 		
 
 
 		Vector2 posInDisplay = new Vector2(posInDisplay3d.x, posInDisplay3d.z);
+        
 
 		Vector2 offsetInMeter = Vector2.Scale(posInDisplay, sizeInMeter);
+
+        // Debug.Log(offsetInMeter);
 		return offsetInMeter;
 	}
 
