@@ -14,5 +14,8 @@ public class BoxSetting : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		gameObject.transform.position = tankManager.transform.position;
+		gameObject.transform.up = tankManager.transform.up;
+		gameObject.transform.forward = tankManager.transform.forward;
+		//gameObject.transform.right = tankManager.transform.right;
 	}
 }

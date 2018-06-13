@@ -26,6 +26,10 @@ public class SprayedTankSelector : MonoBehaviour {
 		sr.lastColor = Color.white;
 	}
 
+	public void updateCam(){
+		cam = GetComponentInParent<Camera>();
+	} 
+
 	public SelectorResult HitTestInGameSpace(float maxRayDistance, LayerMask layer){
 		Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 		RaycastHit hit;

@@ -28,6 +28,14 @@ public class ColorButton : MonoBehaviour/*, IPointerUpHandler, IPointerDownHandl
 
 	public bool isSelecting = false;
 
+	public GameObject setTankBtn;
+
+	SetTankButton stb;
+
+	public GameObject cancelBtn;
+
+	SelectCancelButton scb;
+
 	Vector3 originPos;
 
 	Vector3 selectedPos;
@@ -50,6 +58,12 @@ public class ColorButton : MonoBehaviour/*, IPointerUpHandler, IPointerDownHandl
 		selectorPos = new Vector3();
 		button = GetComponent<Button>();
 		button.onClick.AddListener(SelectTask);
+		scb = cancelBtn.GetComponent<SelectCancelButton>();
+		scb.selectBtn = gameObject;
+
+		stb = setTankBtn.GetComponent<SetTankButton>();
+		stb.selectBtn = gameObject;
+		stb.initSetTankButton();
 	}
 	
 	// Update is called once per frame
@@ -133,19 +147,33 @@ public class ColorButton : MonoBehaviour/*, IPointerUpHandler, IPointerDownHandl
 			}	
 			tankManager.SetActive(false);
 			box.SetActive(false);
+			cancelBtn.SetActive(false);
 			MoveToPosition(originPos);
 		}
 		else{
 			if(tankManager.activeInHierarchy == false){
-				MoveToPosition(selectedPos);
-				//tankManager.transform.position = selectorPos;
-				//tankManager.transform.position = 
+				MoveToPosition(selectedPos); 
+				
+				Debug.Log("hit");
+				cancelBtn.SetActive(true);
+				cancelBtn.GetComponent<RectTransform>().anchoredPosition3D = originPos;
+				
 				tankManager.SetActive(true);
 				box.SetActive(true);
 				tm.initTankManager();
 				tm.SortTank(tm.sortType);
 			}
 		}
+		isSelecting ^= true;
+	}
+
+	public void SelectCancel(){
+		if(isSelecting){
+			image.color = sr.lastColor;
+		}
+		tankManager.SetActive(false);
+		box.SetActive(false);
+		MoveToPosition(originPos);
 		isSelecting ^= true;
 	}
 
