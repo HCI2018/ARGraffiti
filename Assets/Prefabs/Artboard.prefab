@@ -425,6 +425,7 @@ MonoBehaviour:
   rig: {fileID: 4594028068079370}
   display: {fileID: 4082809600021564}
   artboardRT: {fileID: 0}
+  noClearMode: 1
 --- !u!114 &114965154372941714
 MonoBehaviour:
   m_ObjectHideFlags: 1

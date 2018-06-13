@@ -33,9 +33,11 @@ public class BrushGenerator : MonoBehaviour {
 
 	public AnimationCurve flowCurve;
 
+	public Color tintColor;
+
 	// Use this for initialization
 	void Start () {
-		
+		// tintColor = Color.white;
 	}
 
 
@@ -58,7 +60,8 @@ public class BrushGenerator : MonoBehaviour {
 		Vector3 localScale = brush.localScale;
         brush.localScale = Vector3.Scale(localScale, new Vector3(size, size, size));
 		Renderer renderer = brush.GetComponent<Renderer>();
-		renderer.material.SetFloat("_Flow", flow);
+		renderer.material.SetFloat("_Flow", flow);  
+		renderer.material.SetColor("_TintColor", tintColor);
 
 		return brush;
 	}
@@ -75,6 +78,11 @@ public class BrushGenerator : MonoBehaviour {
 		}
 
 		return cursor;
+	}
+
+	public void SetColor(Color newColor)
+	{
+		tintColor = newColor;
 	}
 	
 }

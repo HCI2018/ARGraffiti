@@ -18,6 +18,8 @@ public class ArtboardManager : MonoBehaviour {
 	Material displayMat;
 	public RenderTexture artboardRT;
 
+	public bool noClearMode = true;
+
 	Vector3 worldAnchor;
 	Vector3 worldToHereOffset{
 		get{
@@ -53,8 +55,11 @@ public class ArtboardManager : MonoBehaviour {
 
         rigCamera = rig.GetComponentInChildren<Camera>();
 
-
-		rigCamera.GetComponent<PrePostRender>().onPostRender += CleanSpriteCallback;
+		if(noClearMode)
+		{
+            rigCamera.GetComponent<PrePostRender>().onPostRender += CleanSpriteCallback;
+		}
+		
 
         rigCamera.orthographicSize = sizeInMeter.y / 2.0f * unitsPerMeter;
         this.sizeInMeter = sizeInMeter;
@@ -100,13 +105,16 @@ public class ArtboardManager : MonoBehaviour {
 		// sprite.localScale = realSize;
 		sprite.parent = rig;
 
-		dirtySprites.Add(sprite);
+		if(noClearMode)
+			dirtySprites.Add(sprite);
 	}
 
 //	bool isDirty = false;
 	List<Transform> dirtySprites;
 	void LateUpdate()
-	{
+	{	
+		if(!noClearMode)  return;
+
 		if(dirtySprites != null && dirtySprites.Count > 0)
 		{
             rigCamera.clearFlags = CameraClearFlags.Nothing;

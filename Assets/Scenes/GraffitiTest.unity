@@ -974,6 +974,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  tintColor: {r: 0.28627452, g: 0.40784314, b: 1, a: 1}
 --- !u!4 &822960973
 Transform:
   m_ObjectHideFlags: 0
