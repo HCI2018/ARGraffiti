@@ -31,6 +31,8 @@ public class ArtboardManager : MonoBehaviour {
     {
 		worldAnchor = Vector3.zero;
         sizeInMeter = new Vector2(1, 1);
+
+		dirtySprites = new List<Transform>();
     }
 
 	/// Initialize the artboard with the given center and size.
@@ -47,7 +49,9 @@ public class ArtboardManager : MonoBehaviour {
 		artboardRT.Create();
 
         rigCamera = rig.GetComponentInChildren<Camera>();
-		
+
+
+		rigCamera.GetComponent<PrePostRender>().onPostRender += CleanSpriteCallback;
 
         rigCamera.orthographicSize = sizeInMeter.y / 2.0f * unitsPerMeter;
         this.sizeInMeter = sizeInMeter;
@@ -95,13 +99,38 @@ public class ArtboardManager : MonoBehaviour {
 		// TODO: implement scale
 		// sprite.localScale = realSize;
 		sprite.parent = rig;
+
+		dirtySprites.Add(sprite);
+	}
+
+//	bool isDirty = false;
+	List<Transform> dirtySprites;
+	void LateUpdate()
+	{
+		if(dirtySprites != null && dirtySprites.Count > 0)
+		{
+            rigCamera.clearFlags = CameraClearFlags.Nothing;
+            rigCamera.enabled = false;
+            rigCamera.Render();
+		}
+		
+	}
+
+	void CleanSpriteCallback(Camera cam)
+	{
+		if(cam != rigCamera) return;
+		foreach(Transform sprite in dirtySprites)
+		{
+			sprite.gameObject.SetActive(false);
+		}
+		dirtySprites.Clear();
 	}
 
 
 	Vector2 ArtboardInverseTransformPoint(Vector3 worldPos)
 	{
 		Vector3 posInDisplay3d = display.InverseTransformPoint(worldPos);
-		Debug.Log(posInDisplay3d);
+// 		Debug.Log(posInDisplay3d);
 
 
 		Vector2 posInDisplay = new Vector2(posInDisplay3d.x, posInDisplay3d.z);
@@ -110,9 +139,12 @@ public class ArtboardManager : MonoBehaviour {
 		return offsetInMeter;
 	}
 
-
-	void OnDestroy()
+	void OnDisable()
 	{
-
+		if(rigCamera)
+		{
+            rigCamera.GetComponent<PrePostRender>().onPostRender -= CleanSpriteCallback;
+		}
 	}
+	
 }

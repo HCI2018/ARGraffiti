@@ -10,13 +10,38 @@ public class ARArtboardDrawer : MonoBehaviour {
     public float stepFactor = 0.25f;
     public float interval = 0.1f;
 
+    public BrushGenerator brushGen;
+
     int currentOrder = 0;
 
+    Transform brushCursor;
+    
     private void Start()
     {
         drawCoroutine = null;
-
+        
+        brushCursor = brushGen.GenerateCursor(new RaycastHit());
+        brushCursor.gameObject.SetActive(false);
     }
+
+    void Update()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 1f));
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(ray, out hitInfo, maxRayDistance, collisionLayer))
+        {
+            Transform cursor = brushGen.GenerateCursor(hitInfo);
+            cursor.position = hitInfo.point;
+            cursor.forward = -hitInfo.normal;
+            brushCursor.gameObject.SetActive(true);
+        }
+        else 
+        {
+            brushCursor.gameObject.SetActive(false);
+        }
+    }
+
     Coroutine drawCoroutine;
 
     public void StartDrawing()
@@ -85,13 +110,16 @@ public class ARArtboardDrawer : MonoBehaviour {
 
 //        Debug.Log(curToLastDist);
 
-        GameObject brushGO =
-                    Instantiate(m_Brush, hitInfo.point, Quaternion.identity);
-        brushGO.GetComponentInChildren<SpriteRenderer>().sortingOrder
+
+        Transform brush = brushGen.GenerateBrush(hitInfo);
+
+        brush.GetComponentInChildren<Renderer>().sortingLayerName = "Default";
+        brush.GetComponentInChildren<Renderer>().sortingOrder
             = currentOrder++;
 
-        hitInfo.transform.GetComponentInParent<ArtboardManager>().
-            PlaceSprite(brushGO.transform, hitInfo.point, new Vector2(1, 1));
+        ArtboardManager manager = hitInfo.transform.GetComponentInParent<ArtboardManager>();
+
+        manager.PlaceSprite(brush, hitInfo.point, new Vector2(1, 1));
 
         // Instantiate(debugCube, hitInfo.position, Quaternion.identity);
 
@@ -99,13 +127,13 @@ public class ARArtboardDrawer : MonoBehaviour {
             distToCur += stepDistance)
         {
             Vector3 newPos = curPos + curToLastDir * distToCur;
-            brushGO =
-                    Instantiate(m_Brush, newPos, Quaternion.identity);
-            brushGO.GetComponentInChildren<SpriteRenderer>().sortingOrder
+            brush = brushGen.GenerateBrush(hitInfo);
+
+            brush.GetComponentInChildren<Renderer>().sortingLayerName = "Default";
+            brush.GetComponentInChildren<Renderer>().sortingOrder
                 = currentOrder++;
 
-            hitInfo.transform.GetComponentInParent<ArtboardManager>().
-            PlaceSprite(brushGO.transform, newPos, new Vector2(1, 1));
+            manager.PlaceSprite(brush, newPos, new Vector2(1, 1));
         }
     }
 
