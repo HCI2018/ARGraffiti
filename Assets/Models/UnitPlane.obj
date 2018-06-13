@@ -1,0 +1,27 @@
+# Exported from ProBuilder
+# http://www.procore3d.com/probuilder
+# 6/10/2018 2:58:50 PM
+
+mtllib ./UnitPlane.mtl
+o UnitPlane
+
+g UnitPlane
+v 0.5 0 -0.5
+v 0.5 0 0.5
+v -0.5 0 -0.5
+v -0.5 0 0.5
+
+vn 0 1 0
+vn 0 1 0
+vn 0 1 0
+vn 0 1 0
+
+vt 1.192093E-07 0
+vt 1.192093E-07 1
+vt 1 0
+vt 1 1
+
+g UnitPlane
+usemtl Default_Prototype
+f 3/3/3 4/4/4 2/2/2 1/1/1
+

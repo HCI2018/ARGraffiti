@@ -1,34 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.iOS;
-using ARGraffiti.AR;
 
-public class ARSpriteDrawer : MonoBehaviour {
+public class ARArtboardDrawer : MonoBehaviour {
+
     public GameObject m_Brush;
     public float maxRayDistance = 30.0f;
-    public LayerMask collisionLayer = 1 << 10;  //ARKitPlane layer
-
-    /// stepFactor * diameter = min brush step
+    public LayerMask collisionLayer = 1 << 10;
     public float stepFactor = 0.25f;
-
     public float interval = 0.1f;
-
-    public GameObject debugCube;
 
     int currentOrder = 0;
 
     private void Start()
     {
         drawCoroutine = null;
-        
+
     }
     Coroutine drawCoroutine;
 
     public void StartDrawing()
     {
         // Debug.Log("Start Drawing!");
-        if(drawCoroutine == null)
+        if (drawCoroutine == null)
         {
             drawCoroutine = StartCoroutine(DrawSpriteIE(interval));
         }
@@ -53,77 +47,67 @@ public class ARSpriteDrawer : MonoBehaviour {
 
         while (true)
         {
-            ARPoint point = new ARPoint { x = 0.5, y = 0.5 };
-            ARRaycastHit hitInfo;
-            if (ARRaycast.HitTestWithResultType(point, 
-               ARHitTestResultType.ARHitTestResultTypeEstimatedVerticalPlane, 
-               maxRayDistance, collisionLayer,
-               out hitInfo))
+			Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 1f));
+            RaycastHit hitInfo;
+
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * maxRayDistance);
+
+            if (Physics.Raycast(ray, out hitInfo, maxRayDistance, collisionLayer))
             {
-                if(!lastPosValid)
+                if (!lastPosValid)
                 {
                     lastPosValid = true;
-                    lastPos = hitInfo.position;
+                    lastPos = hitInfo.point;
                 }
-
+//                Debug.Log(hitInfo.textureCoord);
                 PaintSprite(hitInfo, lastPos);
-                lastPos = hitInfo.position;
-                
-                
+				
+
+                lastPos = hitInfo.point;
+
+            } else {
+                Debug.Log("Hit nothing!");
             }
-
-            // if (ARRaycast.HitTestWithResultType(point, 
-            //    ARHitTestResultType.ARHitTestResultTypeExistingPlane,
-            //    maxRayDistance, collisionLayer,
-            //    out hitInfo))
-            // {
-
-            //     if (!lastPosValid)
-            //     {
-            //         lastPosValid = true;
-            //         lastPos = hitInfo.position;
-            //     }
-
-            //     PaintSprite(hitInfo, lastPos);
-            //     lastPos = hitInfo.position;
-                
-            // }
 
             yield return new WaitForSeconds(interval);
         }
 
     }
 
-    void PaintSprite(ARRaycastHit hitInfo, Vector3 lastPos)
+    void PaintSprite(RaycastHit hitInfo, Vector3 lastPos)
     {
         float stepDistance = stepFactor * 0.1f;
 
-        float curToLastDist = Vector3.Distance(lastPos, hitInfo.position);
-        Vector3 curPos = hitInfo.position;
+        float curToLastDist = Vector3.Distance(lastPos, hitInfo.point);
+        Vector3 curPos = hitInfo.point;
         Vector3 curToLastDir = (lastPos - curPos);
         curToLastDir.Normalize();
 
 //        Debug.Log(curToLastDist);
 
         GameObject brushGO =
-                    Instantiate(m_Brush, hitInfo.position, hitInfo.rotation);
+                    Instantiate(m_Brush, hitInfo.point, Quaternion.identity);
         brushGO.GetComponentInChildren<SpriteRenderer>().sortingOrder
             = currentOrder++;
 
+        hitInfo.transform.GetComponentInParent<ArtboardManager>().
+            PlaceSprite(brushGO.transform, hitInfo.point, new Vector2(1, 1));
+
         // Instantiate(debugCube, hitInfo.position, Quaternion.identity);
 
-        for(float distToCur = stepDistance; distToCur < curToLastDist; 
+        for (float distToCur = stepDistance; distToCur < curToLastDist;
             distToCur += stepDistance)
-        {   
+        {
             Vector3 newPos = curPos + curToLastDir * distToCur;
             brushGO =
-                    Instantiate(m_Brush, newPos, hitInfo.rotation);
+                    Instantiate(m_Brush, newPos, Quaternion.identity);
             brushGO.GetComponentInChildren<SpriteRenderer>().sortingOrder
                 = currentOrder++;
+
+            hitInfo.transform.GetComponentInParent<ArtboardManager>().
+            PlaceSprite(brushGO.transform, newPos, new Vector2(1, 1));
         }
     }
 
-    
-    
 
 }
