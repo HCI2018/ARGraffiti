@@ -31,7 +31,7 @@ public class SprayedTankSelector : MonoBehaviour {
 	} 
 
 	public SelectorResult HitTestInGameSpace(float maxRayDistance, LayerMask layer){
-		Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+		Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
 		RaycastHit hit;
 		
 		if(Physics.Raycast(ray, out hit, maxRayDistance, layer)){

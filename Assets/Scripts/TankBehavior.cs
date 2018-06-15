@@ -22,6 +22,8 @@ public class TankBehavior : MonoBehaviour {
 
 	Camera cam;
 
+	bool set = false;
+
 	// Use this for initialization
 	void Start () {
 		//initTank();
@@ -29,6 +31,11 @@ public class TankBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(set == false){
+			initTank();
+			set = true;
+		}
+		
 
 		Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 		

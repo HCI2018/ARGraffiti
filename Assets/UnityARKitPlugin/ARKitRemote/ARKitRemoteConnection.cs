@@ -169,11 +169,11 @@ namespace UnityEngine.XR.iOS
 				arVideo.SetYTexure(remoteScreenYTex);
 			}
 
-			testCamera = GameObject.Find("SafeCamera");
-			UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
-			if (arVideoTest) {
-				arVideoTest.SetYTexure(remoteScreenYTex);
-			}
+			// testCamera = GameObject.Find("SafeCamera");
+			// UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
+			// if (arVideoTest) {
+			// 	arVideoTest.SetYTexure(remoteScreenYTex);
+			// }
 
 
 		}
@@ -189,11 +189,11 @@ namespace UnityEngine.XR.iOS
 				arVideo.SetUVTexure(remoteScreenUVTex);
 			}
 
-			testCamera = GameObject.Find("SafeCamera");
-			UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
-			if (arVideoTest) {
-				arVideoTest.SetYTexure(remoteScreenYTex);
-			}
+			// testCamera = GameObject.Find("SafeCamera");
+			// UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
+			// if (arVideoTest) {
+			// 	arVideoTest.SetYTexure(remoteScreenYTex);
+			// }
 
 		}
 

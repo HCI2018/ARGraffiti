@@ -6,6 +6,8 @@ public enum SortType{normal, vertical, horizontal};
 
 public class TankManager : MonoBehaviour {
 
+	//public bool setted = false;
+
 	public SortType sortType = SortType.normal;
 
 	public GameObject selector;
