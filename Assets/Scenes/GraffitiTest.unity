@@ -391,7 +391,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4459804331441636, guid: f879aaf3eeb0c467eb22cbaf08dc97a4, type: 2}
       propertyPath: m_LocalScale.z
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f879aaf3eeb0c467eb22cbaf08dc97a4, type: 2}
@@ -516,7 +516,7 @@ MonoBehaviour:
   arCamera: {fileID: 9}
   editorCamera: {fileID: 1212650688}
   mountToCamera: {fileID: 1794739794}
-  enableEditorCamera: 1
+  enableEditorCamera: 0
 --- !u!1 &386125852
 GameObject:
   m_ObjectHideFlags: 0
@@ -2015,10 +2015,6 @@ Prefab:
     - target: {fileID: 4177052258190950, guid: 81bf31dbe6eb8734b8354356e183f5b0, type: 2}
       propertyPath: m_RootOrder
       value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 1138209549668878, guid: 81bf31dbe6eb8734b8354356e183f5b0, type: 2}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 81bf31dbe6eb8734b8354356e183f5b0, type: 2}

@@ -22,6 +22,8 @@ public class ARArtboardDrawer : MonoBehaviour {
         
         brushCursor = brushGen.GenerateCursor(new RaycastHit());
         brushCursor.gameObject.SetActive(false);
+
+        activeArtboardManagers = new HashSet<ArtboardManager>();
     }
 
     void Update()
@@ -43,6 +45,7 @@ public class ARArtboardDrawer : MonoBehaviour {
     }
 
     Coroutine drawCoroutine;
+    HashSet<ArtboardManager> activeArtboardManagers;
 
     public void StartDrawing()
     {
@@ -59,6 +62,15 @@ public class ARArtboardDrawer : MonoBehaviour {
         if (drawCoroutine != null)
         {
             StopCoroutine(drawCoroutine);
+
+            foreach (ArtboardManager manager in activeArtboardManagers)
+            {
+                manager.EndStoke();
+            }
+            
+            activeArtboardManagers.Clear();
+            
+
             drawCoroutine = null;
         }
     }
@@ -118,8 +130,13 @@ public class ARArtboardDrawer : MonoBehaviour {
             = currentOrder++;
 
         ArtboardManager manager = hitInfo.transform.GetComponentInParent<ArtboardManager>();
+        if(!activeArtboardManagers.Contains(manager))
+        {
+            activeArtboardManagers.Add(manager);
+            manager.StartStoke();
+        }
 
-        manager.PlaceSprite(brush, hitInfo.point, new Vector2(1, 1));
+        manager.PlaceSprite(brush, hitInfo.point);
 
         // Instantiate(debugCube, hitInfo.position, Quaternion.identity);
 
@@ -133,7 +150,7 @@ public class ARArtboardDrawer : MonoBehaviour {
             brush.GetComponentInChildren<Renderer>().sortingOrder
                 = currentOrder++;
 
-            manager.PlaceSprite(brush, newPos, new Vector2(1, 1));
+            manager.PlaceSprite(brush, newPos);
         }
     }
 
