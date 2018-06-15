@@ -25,6 +25,9 @@ public class StokeManager : MonoBehaviour {
     const int backBrushLayer = 9;
 	const int backBrushMask = 1 << backBrushLayer; // magic number, User Layer 9 is BackBrush
 
+	const int frontBrushLayer = 8;
+	const int frontBrushMask = 1 << frontBrushLayer; // magic number, User Layer 8 is FrontBrush
+
 
 
 	public void InitStokeManager(ArtboardManager artboard)
@@ -43,9 +46,27 @@ public class StokeManager : MonoBehaviour {
 
 	}
 
+	void ClearStackObjects(CapStack<List<Renderer>> stack)
+	{
+		while(stack.Count > 0)
+		{
+			List<Renderer> stroke = stack.Pop();
+			foreach(Renderer renderer in stroke)
+			{
+				Destroy(renderer.gameObject);
+			}
+		}
+	}
+
 	public void StartStoke()
 	{
 		Debug.Assert(activeStoke == null);
+
+		if(redoStack.Count > 0)
+		{
+            ClearStackObjects(redoStack);
+		}
+
 		activeStoke = new List<Renderer>(m_maxRendererPerStoke);
 	}
 
@@ -58,7 +79,7 @@ public class StokeManager : MonoBehaviour {
 		if(undoStack.Push(activeStoke, out oldestStoke))
 		{
 			// exceeds undo stack
-			StartCoroutine(RenderToBackBufferIE(oldestStoke));
+			StartCoroutine(RenderAndDisableIE(oldestStoke, backCamera, backBrushLayer, true));
 		}
 
 		Debug.Log(string.Format("Added Stoke! Now have {0} stokes in undo stack.", undoStack.Count));
@@ -67,26 +88,26 @@ public class StokeManager : MonoBehaviour {
 
 	}
 
-	IEnumerator RenderToBackBufferIE(List<Renderer> stoke)
+	IEnumerator RenderAndDisableIE(List<Renderer> stroke, Camera cam, int rendererLayer, bool willDestroy)
 	{
-		backCamera.clearFlags = CameraClearFlags.Nothing;
-		backCamera.enabled = false;
+        cam.clearFlags = CameraClearFlags.Nothing;
+        cam.enabled = false;
 
-        foreach (Renderer renderer in stoke)
+        foreach (Renderer renderer in stroke)
         {
-            renderer.gameObject.layer = backBrushLayer;
+            renderer.gameObject.layer = rendererLayer;
             renderer.enabled = true;
         }
 
-		backCamera.Render();
+        cam.Render();
 
 		// wait for the back camera finish rendering
 		yield return new WaitForEndOfFrame();
 
-		foreach(Renderer renderer in stoke)
+		foreach(Renderer renderer in stroke)
 		{
 			renderer.enabled = false;
-			Destroy(renderer.gameObject);
+			if(willDestroy)  Destroy(renderer.gameObject);
 		}
 	}
 
@@ -104,8 +125,8 @@ public class StokeManager : MonoBehaviour {
 
     public void Undo()
     {
-        List<Renderer> lastStoke = undoStack.Pop();
-		foreach(Renderer renderer in lastStoke)
+        List<Renderer> lastStroke = undoStack.Pop();
+		foreach(Renderer renderer in lastStroke)
 		{
 			renderer.enabled = false;
 		}
@@ -113,26 +134,21 @@ public class StokeManager : MonoBehaviour {
 		List<Renderer>[] restStokes = undoStack.DumpElements();
 		Graphics.CopyTexture(backBuffer, frontBuffer);
 
-		StartCoroutine(RepaintWithStokes(restStokes, lastStoke));
-
+		StartCoroutine(RepaintWithStokes(restStokes, lastStroke));
     }
 
-	void Update()
+	public void Redo()
 	{
-		#if UNITY_EDITOR
-		if(Input.GetKeyDown(KeyCode.Q))
-		{
-			if(canUndo)  Undo();
-		}
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if(canRedo)  Redo();
-        }
-		#endif
+		List<Renderer> lastRedoStroke = redoStack.Pop();
+		StartCoroutine(RenderAndDisableIE(lastRedoStroke, frontCamera, frontBrushLayer, false));
+		
+		List<Renderer> oldestStroke;
+		bool exceeded = undoStack.Push(lastRedoStroke, out oldestStroke);
+		Debug.Assert(exceeded == false);
 	}
 
-	IEnumerator RepaintWithStokes(List<Renderer>[] stokes, List<Renderer> lastStoke)
-	{
+    IEnumerator RepaintWithStokes(List<Renderer>[] stokes, List<Renderer> lastStoke)
+    {
         foreach (List<Renderer> stoke in stokes)
         {
             foreach (Renderer renderer in stoke)
@@ -141,18 +157,17 @@ public class StokeManager : MonoBehaviour {
             }
         }
 
-		// frontCamera.clearFlags = CameraClearFlags.Color;
-		// frontCamera.backgroundColor = new Color(0, 0, 0, 0);
+        // frontCamera.clearFlags = CameraClearFlags.Color;
+        // frontCamera.backgroundColor = new Color(0, 0, 0, 0);
 
-		Graphics.Blit(backBuffer, frontBuffer);
+        Graphics.Blit(backBuffer, frontBuffer);
 
-		// yield return new WaitForEndOfFrame();
-
+        // yield return new WaitForEndOfFrame();
         // frontCamera.clearFlags = CameraClearFlags.Nothing;
 
-		frontCamera.Render();
+        frontCamera.Render();
 
-		yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         foreach (List<Renderer> stoke in stokes)
         {
@@ -164,19 +179,25 @@ public class StokeManager : MonoBehaviour {
 
         frontCamera.clearFlags = CameraClearFlags.Nothing;
 
-		List<Renderer> oldestStoke;
-		bool exceeded = redoStack.Push(lastStoke, out oldestStoke);
-		Debug.Assert(exceeded == false);
-	}
-
-	public void Redo()
-	{
-		
+        List<Renderer> oldestStoke;
+        bool exceeded = redoStack.Push(lastStoke, out oldestStoke);
+        Debug.Assert(exceeded == false);
+    }
 
 
-	}
-
-	
+    void Update()
+    {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (canUndo) Undo();
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (canRedo) Redo();
+        }
+#endif
+    }
 	public bool canRedo
 	{
 		get
