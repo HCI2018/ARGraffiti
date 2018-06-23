@@ -30,6 +30,7 @@ public class ArtboardManager : MonoBehaviour {
 	}
 
 	StokeManager stokeManager;
+	ArtboardFrameDrawer frameDrawer;
 
     void Start()
     {
@@ -91,6 +92,10 @@ public class ArtboardManager : MonoBehaviour {
 		// init StokeManager
 		stokeManager = GetComponent<StokeManager>();
 		stokeManager.InitStokeManager(this);
+
+
+        frameDrawer = GetComponent<ArtboardFrameDrawer>();
+		frameDrawer.InitArtboardFrame(display, sizeInMeter);
 
 		return artboardRT;
 	}

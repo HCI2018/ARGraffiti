@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 4177052258190950}
   - component: {fileID: 114485969741344762}
   - component: {fileID: 114290472216515504}
+  - component: {fileID: 114843573571056522}
   m_Layer: 0
   m_Name: Artboard
   m_TagString: Untagged
@@ -509,6 +510,21 @@ MonoBehaviour:
   rigCamera: {fileID: 20157819404181984}
   artboardRT: {fileID: 0}
   noClearMode: 1
+--- !u!114 &114843573571056522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1138209549668878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3466205ef5e6f6645b2474f2f21d29f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  framePrefab: {fileID: 1686585796976274, guid: b72ac02516527404c85d9a9921b50507,
+    type: 2}
+  frameWidth: 0.05
+  frameBleedLength: 0.1
 --- !u!114 &114872678721620928
 MonoBehaviour:
   m_ObjectHideFlags: 1
