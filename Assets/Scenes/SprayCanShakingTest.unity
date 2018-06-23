@@ -556,7 +556,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0f35db11f764c4fbfaaa8aed61bb5e82, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 229e4a3fa75e54810aeda83e8ff194bd, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1150,7 +1150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonInterface: {fileID: 1944710516}
   minTotalTime: 0
-  maxTotalTime: 5
+  maxTotalTime: 30
   normalizedTime: 0
 --- !u!1001 &896092254
 Prefab:
