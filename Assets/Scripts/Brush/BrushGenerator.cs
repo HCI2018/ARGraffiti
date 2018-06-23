@@ -32,8 +32,11 @@ public class BrushGenerator : MonoBehaviour {
 
 
 	public AnimationCurve flowCurve;
+	public AnimationCurve flowVolumeCurve;
 
 	public Color tintColor;
+
+	public SprayTimer timer;
 
 	// Use this for initialization
 	void Start () {
@@ -51,7 +54,13 @@ public class BrushGenerator : MonoBehaviour {
 		float negDist = 1.0f - normalizedDist;
 		float flowFactor = flowCurve.Evaluate(negDist);
 
-		float flow = Mathf.Lerp(minFlow, maxFlow, flowFactor);
+		// volume decreasing with the pressed time
+		float normalizedTotalTime = timer.normalizedTime;
+		float negVolume = 1.0f - normalizedTotalTime;
+		// currentVolume = Mathf.Lerp(minVolume, maxVolume, negVolume);
+		float flowVolume = flowVolumeCurve.Evaluate(negVolume);
+
+		float flow = Mathf.Lerp(minFlow, maxFlow, flowFactor * flowVolume);
 
 //		Debug.Log("size: " + size.ToString() + ", flow: " + flow.ToString());
 

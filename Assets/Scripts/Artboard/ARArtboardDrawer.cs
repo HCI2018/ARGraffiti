@@ -12,6 +12,15 @@ public class ARArtboardDrawer : MonoBehaviour {
 
     public BrushGenerator brushGen;
 
+//	public float minTotalTime;
+//	public float maxTotalTime;
+//	//[HideInInspector]
+//	public float normalizedTime;
+//
+//	private float lastTimeDown;
+//	private float lastTimePressed;
+//	private float totalTimePressed;
+
     int currentOrder = 0;
 
     Transform brushCursor;
@@ -53,6 +62,10 @@ public class ARArtboardDrawer : MonoBehaviour {
         if (drawCoroutine == null)
         {
             drawCoroutine = StartCoroutine(DrawSpriteIE(interval));
+
+			//pressed timer
+//			Debug.Log (gameObject.name + "pressed");
+//			lastTimeDown = Time.time;
         }
     }
 
@@ -62,6 +75,17 @@ public class ARArtboardDrawer : MonoBehaviour {
         if (drawCoroutine != null)
         {
             StopCoroutine(drawCoroutine);
+
+			//pressed timer
+//			Debug.Log(gameObject.name + " released!");
+//
+//			lastTimePressed = Time.time - lastTimeDown;
+//			totalTimePressed = totalTimePressed + lastTimePressed;
+//			if (totalTimePressed > maxTotalTime) {
+//				totalTimePressed = maxTotalTime;
+//			}
+//			Debug.Log ("total pressed time: " + totalTimePressed);
+//			normalizedTime = Mathf.InverseLerp(minTotalTime, maxTotalTime, totalTimePressed);
 
             foreach (ArtboardManager manager in activeArtboardManagers)
             {

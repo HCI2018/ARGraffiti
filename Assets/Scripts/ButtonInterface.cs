@@ -29,6 +29,8 @@ public class ButtonInterface : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (OnButtonDown == null)
             OnButtonDown = new ButtonEvent();
+
+
     }
 
     void ClickForwarder()
@@ -43,7 +45,6 @@ public class ButtonInterface : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (!eventData.dragging)
         {
             OnButtonDown.Invoke(button);
-            Debug.Log(gameObject.name + " pressed!");
         }
     }
 
@@ -52,9 +53,11 @@ public class ButtonInterface : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if(!eventData.dragging)
         {
             OnButtonUp.Invoke(button);
-            Debug.Log(gameObject.name + " released!");
+           
+
         }
     }
+
 
 
 }
