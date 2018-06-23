@@ -12,7 +12,7 @@ public class ArtboardManager : MonoBehaviour {
 	public Transform display;
 
 
-	Camera rigCamera;
+	public Camera rigCamera;
 	Renderer displayRenderer;
 	Vector2 sizeInMeter;
 	Material displayMat;
@@ -28,6 +28,8 @@ public class ArtboardManager : MonoBehaviour {
 			return offset;
 		}
 	}
+
+	StokeManager stokeManager;
 
     void Start()
     {
@@ -86,11 +88,24 @@ public class ArtboardManager : MonoBehaviour {
         // displayRenderer.sharedMaterial.mainTexture = artboardRT;
 		// displayRenderer.sharedMaterial.SetTexture("_MetallicGlossMap", Texture2D.blackTexture);
 		
+		// init StokeManager
+		stokeManager = GetComponent<StokeManager>();
+		stokeManager.InitStokeManager(this);
 
 		return artboardRT;
 	}
 
-	public void PlaceSprite(Transform sprite, Vector3 worldPos, Vector2 realSize)
+	public void StartStoke()
+	{
+		stokeManager.StartStoke();
+	}
+
+	public void EndStoke()
+	{
+		stokeManager.EndStoke();
+	}
+
+	public void PlaceSprite(Transform sprite, Vector3 worldPos)
 	{
 		// Vector2 offsetUv = uvPos - new Vector2(0.5f, 0.5f);
 		// Vector2 unitOffset = Vector2.Scale(offsetUv, artboardExtent);
@@ -107,6 +122,11 @@ public class ArtboardManager : MonoBehaviour {
 
 		if(noClearMode)
 			dirtySprites.Add(sprite);
+
+
+		// tell stoke manager about the brush
+		Renderer renderer = sprite.GetComponentInChildren<Renderer>();
+		stokeManager.AddBrush(renderer);
 	}
 
 //	bool isDirty = false;
@@ -129,7 +149,7 @@ public class ArtboardManager : MonoBehaviour {
 		if(cam != rigCamera) return;
 		foreach(Transform sprite in dirtySprites)
 		{
-			sprite.gameObject.SetActive(false);
+			sprite.GetComponentInChildren<Renderer>().enabled = false;
 		}
 		dirtySprites.Clear();
 	}
@@ -155,6 +175,15 @@ public class ArtboardManager : MonoBehaviour {
 		if(rigCamera)
 		{
             rigCamera.GetComponent<PrePostRender>().onPostRender -= CleanSpriteCallback;
+		}
+	}
+
+	void OnDestroy()
+	{
+		if(artboardRT != null)
+		{
+			artboardRT.Release();
+			artboardRT = null;
 		}
 	}
 	
