@@ -56,7 +56,7 @@ public class TankBehavior : MonoBehaviour {
 	}
 
 	public void initTank(){
-		Debug.Log("hit");
+		//Debug.Log("hit");
 		transform.localPosition = oringinPos;
 		tm = GetComponentInParent<TankManager>();
 		selector = tm.selector;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.iOS;
 using ARGraffiti.AR;
 using UnityEngine.UI;
+
 public class ArtboardFactory : MonoBehaviour {
     const float planeExtent = 10f;
 
@@ -15,6 +16,8 @@ public class ArtboardFactory : MonoBehaviour {
     Vector3 centerPoint;
 
 	public RawImage rawImage;
+
+	public ButtonManager bm;
 	
 
     // Use this for initialization
@@ -45,9 +48,9 @@ public class ArtboardFactory : MonoBehaviour {
 			Vector3 worldCenter = collider.transform.TransformPoint(localCenter);
 			Vector3 worldSize = collider.transform.TransformVector(localSize);
 
-			Debug.Log(worldSize);
+			//Debug.Log(worldSize);
 
-			Debug.DrawLine(worldCenter, worldCenter + worldSize / 2.0f);
+			//Debug.DrawLine(worldCenter, worldCenter + worldSize / 2.0f);
 
 			Vector3 scaledSize = Vector3.Scale(localSize, collider.transform.lossyScale);
 			Vector2 xzSize = new Vector2(scaledSize.x, scaledSize.z);
@@ -57,6 +60,8 @@ public class ArtboardFactory : MonoBehaviour {
             ArtboardManager manager = artboard.GetComponent<ArtboardManager>();
 			RenderTexture rt = manager.InitArtboard(worldCenter, collider.transform.rotation, xzSize);
 
+			bm.artBoard = artboard;
+			bm.setBoard();
 
 			if(rawImage)
 			{

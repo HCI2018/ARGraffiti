@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SprayedTank
   - Box
+  - ArtBoard
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - ARKitPlane
   - Artboard
   - SprayedTank
-  - 
+  - SimulatorBox
   - 
   - 
   - 

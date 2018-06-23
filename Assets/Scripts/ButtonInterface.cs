@@ -43,7 +43,7 @@ public class ButtonInterface : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (!eventData.dragging)
         {
             OnButtonDown.Invoke(button);
-            Debug.Log(gameObject.name + " pressed!");
+            //Debug.Log(gameObject.name + " pressed!");
         }
     }
 
@@ -52,7 +52,7 @@ public class ButtonInterface : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if(!eventData.dragging)
         {
             OnButtonUp.Invoke(button);
-            Debug.Log(gameObject.name + " released!");
+            //Debug.Log(gameObject.name + " released!");
         }
     }
 

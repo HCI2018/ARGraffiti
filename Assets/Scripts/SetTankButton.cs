@@ -167,7 +167,6 @@ public class SetTankButton : MonoBehaviour {
 		setted ^= true; 
 	}
 
-
 	public void SetOriginPos(){
 		tankManager.transform.position = originPos;
 		tankManager.transform.rotation = originRot;
@@ -187,7 +186,6 @@ public class SetTankButton : MonoBehaviour {
 		yield return new WaitForSeconds(1.0f);
 		//settedText.SetActive(false);
 		//setText.SetActive(true);
-
 	}
 
 	public void MoveToPosition(Vector3 targetPos){
