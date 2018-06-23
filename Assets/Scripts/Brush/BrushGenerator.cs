@@ -36,13 +36,20 @@ public class BrushGenerator : MonoBehaviour {
 
 	public Color tintColor;
 
+	//[HideInInspector]
 	public SprayTimer timer;
+
+	public ButtonManager bm;
 
 	// Use this for initialization
 	void Start () {
 		// tintColor = Color.white;
 	}
 
+	private void Update()
+	{
+		bm.setDrawFilling(1 - timer.normalizedTime);
+	}
 
 
 	public Transform GenerateBrush(RaycastHit hit)
@@ -56,11 +63,24 @@ public class BrushGenerator : MonoBehaviour {
 
 		// volume decreasing with the pressed time
 		float normalizedTotalTime = timer.normalizedTime;
+
+		//bm.setDrawFilling(normalizedTotalTime);
+
 		float negVolume = 1.0f - normalizedTotalTime;
 		// currentVolume = Mathf.Lerp(minVolume, maxVolume, negVolume);
 		float flowVolume = flowVolumeCurve.Evaluate(negVolume);
 
+		//Debug.Log(flowFactor);
+
+		//Debug.Log(flowVolume);
+
 		float flow = Mathf.Lerp(minFlow, maxFlow, flowFactor * flowVolume);
+
+		//Debug.Log(flowVolume);
+
+		
+
+
 
 //		Debug.Log("size: " + size.ToString() + ", flow: " + flow.ToString());
 

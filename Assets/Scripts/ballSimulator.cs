@@ -6,7 +6,9 @@ public class ballSimulator : MonoBehaviour {
 
 	public GameObject ballTracker;
 
-	public GameObject cam;
+	public CameraPlaytest cameraPlaytest;
+
+	GameObject cam;
 
 	public GameObject ball;
 
@@ -25,6 +27,7 @@ public class ballSimulator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ballRb = ball.GetComponent<Rigidbody>();
+		cam = cameraPlaytest.activeCamera.gameObject;
 		lastPos = cam.transform.position;
 	}
 	

@@ -243,7 +243,7 @@ public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 			case buttonMode.none:
 				break;
 			case buttonMode.draw:
-				OnButtonClick.Invoke(button);
+				// OnButtonClick.Invoke(button);
 				break;
 			case buttonMode.select:
 				//if(isSelecting){

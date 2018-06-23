@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ARArtboardDrawer : MonoBehaviour {
 
@@ -11,6 +12,11 @@ public class ARArtboardDrawer : MonoBehaviour {
     public float interval = 0.1f;
 
     public BrushGenerator brushGen;
+
+    [HideInInspector]
+    public UnityEvent OnStartDrawing;
+    [HideInInspector]
+    public UnityEvent OnStopDrawing;
 
 //	public float minTotalTime;
 //	public float maxTotalTime;
@@ -63,6 +69,10 @@ public class ARArtboardDrawer : MonoBehaviour {
         {
             drawCoroutine = StartCoroutine(DrawSpriteIE(interval));
 
+            if(OnStartDrawing != null)
+            {
+                OnStartDrawing.Invoke();
+            }
 			//pressed timer
 //			Debug.Log (gameObject.name + "pressed");
 //			lastTimeDown = Time.time;
@@ -94,6 +104,10 @@ public class ARArtboardDrawer : MonoBehaviour {
             
             activeArtboardManagers.Clear();
             
+            if(OnStopDrawing != null)
+            {
+                OnStopDrawing.Invoke();
+            }
 
             drawCoroutine = null;
         }

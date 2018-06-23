@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SprayTimer : MonoBehaviour {
 
-	public ButtonInterface buttonInterface;
+	public ARArtboardDrawer drawer;
 
 	public float minTotalTime;
 	public float maxTotalTime;
@@ -23,13 +23,13 @@ public class SprayTimer : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		buttonInterface.OnButtonDown.AddListener(PressTimer);
-		buttonInterface.OnButtonUp.AddListener(TotalPressedTimer);
+		drawer.OnStartDrawing.AddListener(PressTimer);
+		drawer.OnStopDrawing.AddListener(TotalPressedTimer);
 	}
 
 	void OnDisable(){
-		buttonInterface.OnButtonDown.RemoveListener(PressTimer);
-		buttonInterface.OnButtonUp.RemoveListener(TotalPressedTimer);
+		drawer.OnStartDrawing.RemoveListener(PressTimer);
+		drawer.OnStopDrawing.RemoveListener(TotalPressedTimer);
 	}
 	
 	// Update is called once per frame
@@ -37,14 +37,14 @@ public class SprayTimer : MonoBehaviour {
 		
 	}
 
-	void PressTimer(Button button)
+	void PressTimer()
 	{
 		Debug.Log (gameObject.name + "pressed");
 
 		lastTimeDown = Time.time;
 	}
 
-	void TotalPressedTimer(Button button)
+	void TotalPressedTimer()
 	{
 		Debug.Log(gameObject.name + " released!");
 

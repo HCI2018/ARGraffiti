@@ -12,6 +12,15 @@ public class CameraPlaytest : MonoBehaviour {
     public bool enableEditorCamera = false;
 
 	// bool updated = false;
+    public Camera activeCamera{
+        get{
+            if(enableEditorCamera){
+                return editorCamera.GetComponent<Camera>();
+            } else {
+                return arCamera.GetComponent<Camera>();
+            }
+        }
+    }
 
 	// Use this for initialization
 	void Awake () {

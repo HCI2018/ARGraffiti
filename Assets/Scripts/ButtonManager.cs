@@ -11,7 +11,8 @@ public class ButtonManager : MonoBehaviour {
 
 	StokeManager sm;
 
-	public Camera cam;
+	public CameraPlaytest cameraPlaytest;
+	Camera cam;
 
 	public GameObject setBoardButton;
 
@@ -29,9 +30,13 @@ public class ButtonManager : MonoBehaviour {
 
 	Button camB;
 
+	public Image selectButtonImage;
+
 	public LayerMask showPlane;
 
 	public LayerMask hidePlane;
+
+	public float flow;
 
 	// Use this for initialization
 	void Start () {
@@ -41,6 +46,8 @@ public class ButtonManager : MonoBehaviour {
 		redoB.onClick.AddListener(redoButtonListener);
 		undoB.onClick.AddListener(undoButtonListener);
 		camB.onClick.AddListener(cameraButtonListener);
+
+		cam = cameraPlaytest.activeCamera;
 	}
 	
 	// Update is called once per frame
@@ -117,6 +124,10 @@ public class ButtonManager : MonoBehaviour {
 	void CaptureScreenshot(){
 		ScreenCapture.CaptureScreenshot("scrennshot.png");
 		//Debug.Log("fuck!");
+	}
+
+	public void setDrawFilling(float amount){
+		selectButtonImage.fillAmount = amount;
 	}
 
 
