@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class SprayAudio : MonoBehaviour {
 
-	public ButtonInterface buttonInterface;
+	//public ButtonInterface buttonInterface;
 	private AudioSource audioSource;
+
+	public ARArtboardDrawer drawer;
 
 	// Use this for initialization
 	void Start () {
@@ -19,21 +21,21 @@ public class SprayAudio : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		buttonInterface.OnButtonDown.AddListener(SoundOn);
-		buttonInterface.OnButtonUp.AddListener(SoundOff);
+		drawer.OnStartDrawing.AddListener(SoundOn);
+		drawer.OnStopDrawing.AddListener(SoundOff);
 	}
 
 	void OnDisable(){
-		buttonInterface.OnButtonDown.RemoveListener(SoundOn);
-		buttonInterface.OnButtonUp.RemoveListener(SoundOff);
+		drawer.OnStartDrawing.RemoveListener(SoundOn);
+		drawer.OnStopDrawing.RemoveListener(SoundOff);
 	}
 
-	void SoundOn(Button button)
+	void SoundOn()
 	{
 		audioSource.Play ();
 	}
 
-	void SoundOff(Button button)
+	void SoundOff()
 	{
 		audioSource.Stop ();
 	}
