@@ -32,6 +32,8 @@ namespace UnityEngine.XR.iOS
 
 		bool bTexturesInitialized;
 
+		public GameObject testCamera;
+
 		// Use this for initialization
 		void Start () {
 
@@ -167,6 +169,13 @@ namespace UnityEngine.XR.iOS
 				arVideo.SetYTexure(remoteScreenYTex);
 			}
 
+			// testCamera = GameObject.Find("SafeCamera");
+			// UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
+			// if (arVideoTest) {
+			// 	arVideoTest.SetYTexure(remoteScreenYTex);
+			// }
+
+
 		}
 
 		void ReceiveRemoteScreenUVTex(MessageEventArgs mea)
@@ -179,6 +188,12 @@ namespace UnityEngine.XR.iOS
 			if (arVideo) {
 				arVideo.SetUVTexure(remoteScreenUVTex);
 			}
+
+			// testCamera = GameObject.Find("SafeCamera");
+			// UnityARVideo arVideoTest = testCamera.GetComponent<UnityARVideo>();
+			// if (arVideoTest) {
+			// 	arVideoTest.SetYTexure(remoteScreenYTex);
+			// }
 
 		}
 

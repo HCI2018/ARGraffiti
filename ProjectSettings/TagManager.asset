@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - SprayedTank
+  - Box
+  - ArtBoard
   layers:
   - Default
   - TransparentFX
@@ -13,12 +16,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Brush
+  - BackBrush
   - ARKitPlane
-  - 
-  - 
-  - 
+  - Artboard
+  - SprayedTank
+  - SimulatorBox
   - 
   - 
   - 
