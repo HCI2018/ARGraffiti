@@ -15,7 +15,11 @@ public class SprayTimer : MonoBehaviour {
 
 	private float lastTimeDown;
 	private float lastTimePressed;
-	private float totalTimePressed;
+	[HideInInspector]
+	public float totalTimePressed;
+
+	[HideInInspector]
+	public BrushGenerator bg;
 
 	// Use this for initialization
 	void Start () {
@@ -50,10 +54,42 @@ public class SprayTimer : MonoBehaviour {
 
 		lastTimePressed = Time.time - lastTimeDown;
 		totalTimePressed = totalTimePressed + lastTimePressed;
+		TotalTimeCheck();
+
+		Debug.Log ("total pressed time: " + totalTimePressed);
+
+		normalizedTime = Total2Normalized(totalTimePressed);
+		NormalizedTimeCheck();
+	}
+
+	public float Total2Normalized(float totalPressedTime){
+		float normalizedTime = Mathf.InverseLerp(minTotalTime, maxTotalTime, totalPressedTime);
+		return normalizedTime;
+	}
+
+	public float Normalized2Total(float normalizedTime){
+		float totalPressedTime = Mathf.Lerp(minTotalTime, maxTotalTime, normalizedTime);
+		return totalPressedTime;
+	}
+
+
+	public void TotalTimeCheck(){
 		if (totalTimePressed > maxTotalTime) {
 			totalTimePressed = maxTotalTime;
 		}
-		Debug.Log ("total pressed time: " + totalTimePressed);
-		normalizedTime = Mathf.InverseLerp(minTotalTime, maxTotalTime, totalTimePressed);
+		else if(totalTimePressed < minTotalTime){
+			totalTimePressed = minTotalTime;
+		}
+		else{}
+	}
+
+	public void NormalizedTimeCheck(){
+		if(normalizedTime < minTotalTime){
+			normalizedTime = minTotalTime;
+		}
+		else if(normalizedTime > maxTotalTime){
+			normalizedTime = maxTotalTime;
+		}
+		else{}
 	}
 }

@@ -36,7 +36,7 @@ public class ButtonManager : MonoBehaviour {
 
 	public LayerMask hidePlane;
 
-	public float flow;
+	//public float flow;
 
 	// Use this for initialization
 	void Start () {
@@ -122,7 +122,7 @@ public class ButtonManager : MonoBehaviour {
 	}
 
 	void CaptureScreenshot(){
-		ScreenCapture.CaptureScreenshot("scrennshot.png");
+		// ScreenCapture.CaptureScreenshot("scrennshot.png");
 		//Debug.Log("fuck!");
 	}
 

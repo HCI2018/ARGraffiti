@@ -67,7 +67,10 @@ public class ArtboardFrameDrawer : MonoBehaviour {
 		leftFrame.GetComponent<Renderer>().material = vertMat;
 		rightFrame.GetComponent<Renderer>().material = vertMat;
 
-		
+		topFrame.transform.parent = display;
+		bottomFrame.transform.parent = display;
+		leftFrame.transform.parent = display;
+		rightFrame.transform.parent = display;
 
     }
 

@@ -169,24 +169,6 @@ public class ColorButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 		}
 	}
 
-	// void NoneAndSet(){
-	// 	if(selector != null){
-	// 		sr = sts.HitTestInGameSpace(sts.maxRayDistance, sts.sprayedTankLayer);
-	// 		if(sr.found == true){
-	// 			image.color = sr.color;
-	// 		}
-	// 		else{
-	// 			if(sr.lastColor == new Color(0,0,0,0)){
-	// 				image.color = Color.white;
-	// 			}
-	// 			else{
-	// 				image.color = sr.lastColor;
-	// 			}
-				
-	// 		}
-	// 	}
-	// }
-
 	void DrawAndSet(){
 
 	}

@@ -74,6 +74,7 @@ public class ArtboardManager : MonoBehaviour {
 		// set up display
 		display.SetPositionAndRotation(worldCenter, worldRotation);
 		display.localScale = Vector3.Scale(display.localScale, new Vector3(sizeInMeter.x, 1f, sizeInMeter.y));
+		
 
 		displayRenderer = display.GetComponentInChildren<Renderer>();
 
